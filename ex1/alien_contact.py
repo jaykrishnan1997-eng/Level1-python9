@@ -26,20 +26,30 @@ class AlienContact(BaseModel):
         if not (self.contact_id[0] == 'A' and self.contact_id[1] == 'C'):
             raise ValueError('Contact ID must start with "AC"')
 
-        if self.contact_type == ContactType.PHYSICAL and not self.is_verified:
+        if (
+            self.contact_type == ContactType.PHYSICAL
+            and not self.is_verified
+        ):
             raise ValueError('Physical contact report must be verified')
 
-        if self.contact_type == ContactType.TELEPATHIC and self.witness_count < 3:
-            raise ValueError('Telepathic contact requires at least 3 witnesses')
+        if (
+            self.contact_type == ContactType.TELEPATHIC
+            and self.witness_count < 3
+        ):
+            raise ValueError(
+                'Telepathic contact requires at least 3 witnesses'
+            )
 
         if self.signal_strength > 7.0 and not self.message_received:
-            raise ValueError('Strong signals should include a received message')
+            raise ValueError(
+                'Strong signals should include a received message'
+            )
 
         return self
 
 
 def main() -> None:
-    validcontact = AlienContact(
+    valid_contact = AlienContact(
         contact_id="AC_2024_001", contact_type=ContactType.RADIO,
         location="Area 51, Nevada", signal_strength=8.5,
         duration_minutes=45, witness_count=5,
@@ -48,13 +58,13 @@ def main() -> None:
     print("Alien Contact Log Validation")
     print("======================================")
     print("Valid contact report:")
-    print(f"ID: {validcontact.contact_id}")
-    print(f"Type: {validcontact.contact_type.lower()}")
-    print(f"Location: {validcontact.location}")
-    print(f"Signal: {validcontact.signal_strength}/10")
-    print(f"Duration: {validcontact.duration_minutes} minutes")
-    print(f"Witnesses: {validcontact.witness_count}")
-    print(f"Message: '{validcontact.message_received}'")
+    print(f"ID: {valid_contact.contact_id}")
+    print(f"Type: {valid_contact.contact_type.lower()}")
+    print(f"Location: {valid_contact.location}")
+    print(f"Signal: {valid_contact.signal_strength}/10")
+    print(f"Duration: {valid_contact.duration_minutes} minutes")
+    print(f"Witnesses: {valid_contact.witness_count}")
+    print(f"Message: '{valid_contact.message_received}'")
     print("======================================")
     print("Expected validation error:")
     try:

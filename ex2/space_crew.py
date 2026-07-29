@@ -1,3 +1,16 @@
+#!/usr/bin/env python3
+# ########################################################################### #
+#   shebang: 1                                                                #
+#                                                          :::      ::::::::  #
+#   space_crew.py                                        :+:      :+:    :+:  #
+#                                                      +:+ +:+         +:+    #
+#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
+#                                                  +#+#+#+#+#+   +#+          #
+#   Created: 2026/07/29 21:46:18 by jay-k               #+#    #+#            #
+#   Updated: 2026/07/29 23:14:55 by jay-k              ###   ########.fr      #
+#                                                                             #
+# ########################################################################### #
+
 from pydantic import BaseModel, Field, ValidationError, model_validator
 from datetime import datetime
 from enum import Enum
@@ -31,50 +44,82 @@ class SpaceMission(BaseModel):
     mission_status: str = "planned"
     budget_millions: float = Field(ge=1.0, le=10000.0)
 
-# fix below
-
     @model_validator(mode='after')
-    def check_rules(self) -> 'AlienContact':
-        if not (self.contact_id[0] == 'A' and self.contact_id[1] == 'C'):
-            raise ValueError('Contact ID must start with "AC"')
+    def check_mission_rules(self) -> 'SpaceMission':
+        if not (self.mission_id[0] == 'M'):
+            raise ValueError('Mission ID must start with "M"')
 
-        if self.contact_type == ContactType.PHYSICAL and not self.is_verified:
-            raise ValueError('Physical contact report must be verified')
+        if not any(
+            member.rank in (Rank.COMMANDER, Rank.CAPTAIN)
+            for member in self.crew
+        ):
+            raise ValueError(
+                'Mission must have at least one Commander or Captain'
+            )
 
-        if self.contact_type == ContactType.TELEPATHIC and self.witness_count < 3:
-            raise ValueError('Telepathic contact requires at least 3 witnesses')
-
-        if self.signal_strength > 7.0 and not self.message_received:
-            raise ValueError('Strong signals should include a received message')
+        if self.duration_days > 365:
+            experienced_count = sum(
+                1 for member in self.crew if member.years_experience >= 5
+            )
+            if experienced_count < len(self.crew) * 0.5:
+                raise ValueError(
+                    'Long missions need 50% experienced crew (5+ years)'
+                )
+        if not all(member.is_active for member in self.crew):
+            raise ValueError('All crew members must be active')
 
         return self
 
 
 def main() -> None:
-    validcontact = AlienContact(
-        contact_id="AC_2024_001", contact_type=ContactType.RADIO,
-        location="Area 51, Nevada", signal_strength=8.5,
-        duration_minutes=45, witness_count=5,
-        message_received="Greetings from Zeta Reticuli"
+    valid_crew = [
+        CrewMember(
+            member_id="CM001", name="Sarah Connor", rank=Rank.COMMANDER,
+            age=42, specialization="Mission Command", years_experience=20,
+        ),
+        CrewMember(
+            member_id="CM002", name="John Smith", rank=Rank.LIEUTENANT,
+            age=34, specialization="Navigation", years_experience=8,
+        ),
+        CrewMember(
+            member_id="CM003", name="Alice Johnson", rank=Rank.OFFICER,
+            age=29, specialization="Engineering", years_experience=6,
+        ),
+    ]
+    valid_mission = SpaceMission(
+        mission_id="M2024_MARS", mission_name="Mars Colony Establishment",
+        destination="Mars", duration_days=900, crew=valid_crew,
+        budget_millions=2500.0,
     )
-    print("Alien Contact Log Validation")
+    print("Space Mission Crew Validation")
     print("======================================")
-    print("Valid contact report:")
-    print(f"ID: {validcontact.contact_id}")
-    print(f"Type: {validcontact.contact_type.lower()}")
-    print(f"Location: {validcontact.location}")
-    print(f"Signal: {validcontact.signal_strength}/10")
-    print(f"Duration: {validcontact.duration_minutes} minutes")
-    print(f"Witnesses: {validcontact.witness_count}")
-    print(f"Message: '{validcontact.message_received}'")
+    print("Valid mission created:")
+    print(f"Mission: {valid_mission.mission_name}")
+    print(f"ID: {valid_mission.mission_id}")
+    print(f"Destination: {valid_mission.destination}")
+    print(f"Duration: {valid_mission.duration_days} days")
+    print(f"Budget: ${valid_mission.budget_millions}M")
+    print(f"Crew size: {len(valid_mission.crew)}")
+    print("Crew members:")
+    for member in valid_mission.crew:
+        print(
+            f"- {member.name} ({member.rank.lower()}) "
+            f"- {member.specialization}"
+        )
     print("======================================")
     print("Expected validation error:")
     try:
-        AlienContact(
-            contact_id="AC_2024_001", contact_type=ContactType.TELEPATHIC,
-            location="Area 51, Nevada", signal_strength=8.5,
-            duration_minutes=45, witness_count=2,
-            message_received="Greetings from Zeta Reticuli"
+        SpaceMission(
+            mission_id="M2024_TEST",
+            mission_name="Test Mission Without Command",
+            destination="Moon", duration_days=30,
+            crew=[
+                CrewMember(
+                    member_id="CM004", name="Bob Ross", rank=Rank.CADET,
+                    age=22, specialization="Support", years_experience=2,
+                ),
+            ],
+            budget_millions=50.0,
         )
     except ValidationError as e:
         msg = e.errors()[0]['msg']
@@ -83,22 +128,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
-#@model_validator(mode='after')
-#    def check_mission_rules(self) -> 'SpaceMission':
-#        if not self.mission_id.startswith('M'):
-#            raise ValueError('Mission ID must start with "M"')
-#
-#        if not any(member.rank in (Rank.COMMANDER, Rank.CAPTAIN) for member in self.crew):
-#            raise ValueError('Mission must have at least one Commander or Captain')
-#
-#
-#        if self.duration_days > 365:
-#            experienced_count = sum(1 for member in self.crew if member.years_experience >= 5)
-#            if experienced_count < len(self.crew) * 0.5:
-#                raise ValueError('Long missions need 50% experienced crew (5+ years)')
-#
-#        if not all(member.is_active for member in self.crew):
-#            raise ValueError('All crew members must be active')
-#
-#        return self
