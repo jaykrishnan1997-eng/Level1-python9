@@ -7,7 +7,7 @@
 #   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/07/29 21:46:18 by jay-k               #+#    #+#            #
-#   Updated: 2026/07/30 12:11:54 by jkrishna           ###   ########.fr      #
+#   Updated: 2026/07/30 12:50:03 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -45,6 +45,8 @@ class SpaceMission(BaseModel):
     budget_millions: float = Field(ge=1.0, le=10000.0)
 
     @model_validator(mode='after')
+    # i leave the error list collection to show what happens
+    # in model_validator by default
     def check_mission_rules(self) -> 'SpaceMission':
         if not (self.mission_id[0] == 'M'):
             raise ValueError('Mission ID must start with "M"')
