@@ -4,10 +4,10 @@
 #                                                          :::      ::::::::  #
 #   space_crew.py                                        :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
-#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
+#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/07/29 21:46:18 by jay-k               #+#    #+#            #
-#   Updated: 2026/07/29 23:14:55 by jay-k              ###   ########.fr      #
+#   Updated: 2026/07/30 12:11:54 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -72,43 +72,44 @@ class SpaceMission(BaseModel):
 
 
 def main() -> None:
-    valid_crew = [
-        CrewMember(
-            member_id="CM001", name="Sarah Connor", rank=Rank.COMMANDER,
-            age=42, specialization="Mission Command", years_experience=20,
-        ),
-        CrewMember(
-            member_id="CM002", name="John Smith", rank=Rank.LIEUTENANT,
-            age=34, specialization="Navigation", years_experience=8,
-        ),
-        CrewMember(
-            member_id="CM003", name="Alice Johnson", rank=Rank.OFFICER,
-            age=29, specialization="Engineering", years_experience=6,
-        ),
-    ]
-    valid_mission = SpaceMission(
-        mission_id="M2024_MARS", mission_name="Mars Colony Establishment",
-        destination="Mars", duration_days=900, crew=valid_crew,
-        budget_millions=2500.0,
-    )
-    print("Space Mission Crew Validation")
-    print("======================================")
-    print("Valid mission created:")
-    print(f"Mission: {valid_mission.mission_name}")
-    print(f"ID: {valid_mission.mission_id}")
-    print(f"Destination: {valid_mission.destination}")
-    print(f"Duration: {valid_mission.duration_days} days")
-    print(f"Budget: ${valid_mission.budget_millions}M")
-    print(f"Crew size: {len(valid_mission.crew)}")
-    print("Crew members:")
-    for member in valid_mission.crew:
-        print(
-            f"- {member.name} ({member.rank.lower()}) "
-            f"- {member.specialization}"
-        )
-    print("======================================")
-    print("Expected validation error:")
     try:
+        valid_crew = [
+            CrewMember(
+                member_id="CM001", name="Sarah Connor", rank=Rank.COMMANDER,
+                age=42, specialization="Mission Command", years_experience=20,
+            ),
+            CrewMember(
+                member_id="CM002", name="John Smith", rank=Rank.LIEUTENANT,
+                age=34, specialization="Navigation", years_experience=8,
+            ),
+            CrewMember(
+                member_id="CM003", name="Alice Johnson", rank=Rank.OFFICER,
+                age=29, specialization="Engineering", years_experience=6,
+            ),
+        ]
+        valid_mission = SpaceMission(
+            mission_id="M2024_MARS", mission_name="Mars Colony Establishment",
+            destination="Mars", duration_days=900, crew=valid_crew,
+            budget_millions=2500.0,
+        )
+        print("Space Mission Crew Validation")
+        print("======================================")
+        print("Valid mission created:")
+        print(f"Mission: {valid_mission.mission_name}")
+        print(f"ID: {valid_mission.mission_id}")
+        print(f"Destination: {valid_mission.destination}")
+        print(f"Duration: {valid_mission.duration_days} days")
+        print(f"Budget: ${valid_mission.budget_millions}M")
+        print(f"Crew size: {len(valid_mission.crew)}")
+        print("Crew members:")
+        for member in valid_mission.crew:
+            print(
+                f"- {member.name} ({member.rank.lower()}) "
+                f"- {member.specialization}"
+            )
+        print("======================================")
+        print("Expected validation error:")
+
         SpaceMission(
             mission_id="M2024_TEST",
             mission_name="Test Mission Without Command",

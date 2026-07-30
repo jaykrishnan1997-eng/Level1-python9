@@ -4,10 +4,10 @@
 #                                                          :::      ::::::::  #
 #   space_station.py                                     :+:      :+:    :+:  #
 #                                                      +:+ +:+         +:+    #
-#   By: jay-k <jay-k@student.42.fr>                  +#+  +:+       +#+       #
+#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/07/20 14:18:19 by jkrishna            #+#    #+#            #
-#   Updated: 2026/07/29 23:18:28 by jay-k              ###   ########.fr      #
+#   Updated: 2026/07/30 11:53:19 by jkrishna           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -27,35 +27,40 @@ class SpaceStation(BaseModel):
 
 
 def main() -> None:
-    valid_station = SpaceStation.model_validate({
-        "station_id": "ISS001", "name": "International Space Station",
-        "crew_size": 6, "power_level": 85.5, "oxygen_level": 92.3,
-        "last_maintenance": "2026-06-15T09:30:00",
-        "is_operational": True, "notes": "Routine inspection completed",
-    })
-    print("Space Station Data Validation")
-    print("========================================")
-    print("Valid station created:")
-    print(f"ID: {valid_station.station_id}")
-    print(f"Name: {valid_station.name}")
-    print(f"Crew: {valid_station.crew_size} people")
-    print(f"Power: {valid_station.power_level}%")
-    print(f"Oxygen: {valid_station.oxygen_level}%")
-    print(f"Last maintenance: {valid_station.last_maintenance}")
-    print(f"Notes: {valid_station.notes}")
-    if valid_station.is_operational:
-        print("Status: Operational")
-    else:
-        print("Status: Not Operational")
-    print()
-    print("========================================")
-    print("Expected validation error:")
     try:
+        valid_station = SpaceStation.model_validate({
+            "station_id": "ISS001", "name": "International Space Station",
+            "crew_size": 6, "power_level": 85.5, "oxygen_level": 92.3,
+            "last_maintenance": "2026-06-15T09:30:00",
+            "is_operational": True, "notes": "Routine inspection completed",
+        })
+        print("Space Station Data Validation")
+        print("========================================")
+        print("Valid station created:")
+        print(f"ID: {valid_station.station_id}")
+        print(f"Name: {valid_station.name}")
+        print(f"Crew: {valid_station.crew_size} people")
+        print(f"Power: {valid_station.power_level}%")
+        print(f"Oxygen: {valid_station.oxygen_level}%")
+        print(f"Last maintenance: {valid_station.last_maintenance}")
+        print(f"Notes: {valid_station.notes}")
+        if valid_station.is_operational:
+            print("Status: Operational")
+        else:
+            print("Status: Not Operational")
+        print()
+        print("========================================")
+        print("Expected validation error:")
+    # except ValidationError as e:
+    #     # print(f"{e.errors()[0]['loc']}")
+    #     print(f"{e.errors()[0]['msg']}")
+    # try:
         SpaceStation(
             station_id="ISS002", name="Space Station",
             crew_size=25, power_level=50.5, oxygen_level=64.3
         )
     except ValidationError as e:
+        # print(f"{e.errors()[0]['loc']}")
         print(f"{e.errors()[0]['msg']}")
 
 
