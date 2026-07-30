@@ -1,3 +1,16 @@
+#!/usr/bin/env python3
+# ########################################################################### #
+#   shebang: 1                                                                #
+#                                                          :::      ::::::::  #
+#   alien_contact.py                                     :+:      :+:    :+:  #
+#                                                      +:+ +:+         +:+    #
+#   By: jkrishna <jkrishna@student.42.fr>            +#+  +:+       +#+       #
+#                                                  +#+#+#+#+#+   +#+          #
+#   Created: 2026/07/30 10:50:46 by jkrishna            #+#    #+#            #
+#   Updated: 2026/07/30 10:50:50 by jkrishna           ###   ########.fr      #
+#                                                                             #
+# ########################################################################### #
+
 from pydantic import BaseModel, Field, ValidationError, model_validator
 from datetime import datetime
 from enum import Enum
